@@ -11,6 +11,13 @@
 using namespace std;
 using namespace std::experimental;
 
+void checkRange(float& coordinate){
+    while(coordinate<0||coordinate>100){
+        cout<<"Given coordinate is not in range 0-100!\nPlease try again:";
+        cin>>coordinate;
+    }
+}
+
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};
@@ -56,15 +63,19 @@ int main(int argc, const char **argv)
     // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
     // user input for these values using std::cin. Pass the user input to the
     // RoutePlanner object below in place of 10, 10, 90, 90.
-    float start_x,start_y, end_x, end_y;
-    cout<<"Please give start coordinates:\nCoordinate x=";
+    float start_x=-1,start_y=-1, end_x=-1, end_y=-1;
+    cout<<"Please give start coordinates (in range 0-100):\nCoordinate x=";
     cin>>start_x;
+    checkRange(start_x);
     cout<<"Coordinate y:";
     cin>>start_y;
-    cout<<"Now give target coordinates:\nCoordinate x:";
+    checkRange(start_y);
+    cout<<"Now give target coordinates (in range 0-100):\nCoordinate x:";
     cin>>end_x;
+    checkRange(end_x);
     cout<<"Coordinate_y:";
     cin>>end_y;
+    checkRange(end_y);
     // Build Model.
     RouteModel model{osm_data};
 
