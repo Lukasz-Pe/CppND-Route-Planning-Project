@@ -6,3 +6,9 @@ test.cpp
 build/
 bin/
 lib/
+.idea
+.idea/*
+build
+build/*
+cmake-build-debug
+cmake-build-debug/*
