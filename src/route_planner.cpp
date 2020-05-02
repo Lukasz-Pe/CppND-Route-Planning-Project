@@ -33,9 +33,7 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node){
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     current_node->FindNeighbors();
-    std::cout<<"current_node->x: "<<current_node->x<<" y: "<<current_node->y<<"\n";
     for(auto node:current_node->neighbors){
-        std::cout<<"x: "<<node->x<<" y: "<<node->y<<"\n";
         node->parent=current_node;
         node->h_value=CalculateHValue(node);
         node->g_value=current_node->g_value+current_node->distance(*node);
@@ -72,7 +70,18 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
-
+    RouteModel::Node* node=current_node;
+    while(true){
+        path_found.emplace_back(*node);
+        distance+=node->distance(*node->parent);
+        if(node->parent==nullptr){
+            break;
+        }
+        node=node->parent;
+    }
+    if(path_found.size()>0){
+        std::reverse(path_found.begin(),path_found.end());
+    }
     // TODO: Implement your solution here.
 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
