@@ -52,7 +52,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
 RouteModel::Node *RoutePlanner::NextNode() {
     std::sort(open_list.begin(),open_list.end(), compare_nodes);
-    RouteModel::Node *smallest_cost=open_list[open_list.size()-1];
+    RouteModel::Node *smallest_cost=open_list.back();//[open_list.size()-1];
     open_list.pop_back();
     return smallest_cost;
 }
@@ -70,16 +70,16 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
-    RouteModel::Node* node=current_node;
+    RouteModel::Node *node=current_node;
     while(true){
         path_found.emplace_back(*node);
-        distance+=node->distance(*node->parent);
         if(node->parent==nullptr){
             break;
         }
+        distance+=node->distance(*node->parent);
         node=node->parent;
     }
-    if(path_found.size()>0){
+    if(!path_found.empty()){
         std::reverse(path_found.begin(),path_found.end());
     }
     // TODO: Implement your solution here.
@@ -97,9 +97,26 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 // - When the search has reached the end_node, use the ConstructFinalPath method to return the final path that was found.
 // - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
 
-void RoutePlanner::AStarSearch() {
+void RoutePlanner::AStarSearch(){
     RouteModel::Node *current_node = nullptr;
-
+    current_node=start_node;
+    current_node->visited=true;
+    current_node->g_value=0.0;
+    current_node->h_value=CalculateHValue(end_node);
+    open_list.emplace_back(current_node);
+//    std::cout<<"AStarSearch (przed while) current_node="<<current_node<<"\n";
+    while(!open_list.empty()){
+//        std::cout<<"Początek while AStarSearch\n";
+        current_node=NextNode();
+        if(current_node==end_node){
+            break;
+        }
+        AddNeighbors(current_node);
+    }
+//    std::cout<<"AStarSearch current_node="<<current_node<<"\n";
+    m_Model.path=ConstructFinalPath(current_node);
+    
+    
     // TODO: Implement your solution here.
 
 }
