@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "route_model.h"
 
 
@@ -25,7 +26,9 @@ class RoutePlanner {
     std::vector<RouteModel::Node*> open_list;
     RouteModel::Node *start_node;
     RouteModel::Node *end_node;
-
+    static bool compare_nodes(const RouteModel::Node* first, const RouteModel::Node* second){
+        return (first->g_value+first->h_value)>(second->g_value+second->h_value);
+    };
     float distance = 0.0f;
     RouteModel &m_Model;
 };
